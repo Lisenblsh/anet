@@ -1,7 +1,7 @@
 use super::{ClientTransport, ConnectionResult, MutexVpnStream};
 use crate::config::CoreConfig;
 use crate::auth::{AuthHandler, StreamAuthChannel};
-use anyhow::{Context, Result};
+use anyhow::Result;
 use async_trait::async_trait;
 use bytes::Bytes;
 use log::{info, error};
