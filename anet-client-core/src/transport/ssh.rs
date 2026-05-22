@@ -7,7 +7,7 @@ use bytes::Bytes;
 use log::{info, error};
 use russh::client::Handler;
 use russh::{Channel, ChannelMsg};
-use std::net::SocketAddr;
+use std::net::{SocketAddr, ToSocketAddrs};
 use std::pin::Pin;
 use std::sync::Arc;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
@@ -39,7 +39,7 @@ impl SshTransport {
 impl ClientTransport for SshTransport {
     async fn connect(&self) -> Result<ConnectionResult> {
         let addr_str = &self.config.main.address;
-        let addr: SocketAddr = addr_str.parse().context("Invalid server address")?;
+        let addr: SocketAddr = addr_str.to_socket_addrs()?.next().ok_or(anyhow::anyhow!("Invalid server address"))?;
         let user = self.config.transport.ssh_user.as_deref().unwrap_or("root");
 
         // Хак лимита (на максимум возможный в протоколе, спасает от затыков).
